@@ -64,13 +64,20 @@ def binary_search(mylist, item):
     print("Cannot find {} in list.".format(item))
 
 
-args = get_args()
-mylist = list(range(0, args.max, args.step))
-start = time.time()
-if args.binary:
-    binary_search(mylist, args.number)
-else:
-    simple_search(mylist, args.number)
-end = time.time()
-time = format(end - start)
-print("Search took {}".format(time))
+def main():
+    args = get_args()
+    mylist = list(range(0, args.max, args.step))
+
+    start = time.time()
+    if args.binary:
+        binary_search(mylist, args.number)
+    else:
+        simple_search(mylist, args.number)
+    end = time.time()
+
+    time = format(end - start)
+    print("Search took {}".format(time))
+
+
+if __name__ == '__main__':
+    main()
