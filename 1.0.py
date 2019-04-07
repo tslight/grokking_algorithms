@@ -75,8 +75,8 @@ def main():
         simple_search(mylist, args.number)
     end = time.time()
 
-    time = format(end - start)
-    print("Search took {}".format(time))
+    elapsed = round(end - start, 20)
+    print("Search took {}".format(elapsed))
 
 
 if __name__ == '__main__':
