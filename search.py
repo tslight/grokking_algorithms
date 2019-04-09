@@ -21,7 +21,7 @@ def get_args():
     return parser.parse_args()
 
 
-def simple_search(mylist, item):
+def simple(mylist, item):
     count = 0
     for e in mylist:
         count += 1
@@ -30,7 +30,7 @@ def simple_search(mylist, item):
     return (False, count)
 
 
-def binary_search(mylist, item):
+def binary(mylist, item):
     low = 0
     count = 0
     high = len(mylist) - 1
@@ -48,7 +48,7 @@ def binary_search(mylist, item):
     return (False, count)
 
 
-def recursive_binary_search(arr, element, count):
+def recursive_binary(arr, element, count):
     count += 1
     low = 0
     high = len(arr) - 1
@@ -58,9 +58,9 @@ def recursive_binary_search(arr, element, count):
     elif high == 0:
         return (False, count)
     elif element > arr[mid]:
-        return recursive_binary_search(arr[mid + 1:], element, count)
+        return recursive_binary(arr[mid + 1:], element, count)
     elif element < arr[mid]:
-        return recursive_binary_search(arr[:mid - 1], element, count)
+        return recursive_binary(arr[:mid - 1], element, count)
 
 
 def search():
@@ -68,13 +68,13 @@ def search():
     mylist = list(range(0, args.max, args.step))
 
     if args.binary:
-        found, count = binary_search(mylist, args.number)
+        found, count = binary(mylist, args.number)
         search_type = "binary"
     elif args.recursive:
-        found, count = recursive_binary_search(mylist, args.number, 0)
+        found, count = recursive_binary(mylist, args.number, 0)
         search_type = "recursive binary"
     else:
-        found, count = simple_search(mylist, args.number)
+        found, count = simple(mylist, args.number)
         search_type = "simple"
 
     if found:
