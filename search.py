@@ -4,20 +4,24 @@ import timeit
 
 
 def get_args():
-    parser = ArgumentParser(description='Binary search')
+    parser = ArgumentParser(
+        description='Search for an item in a list/array.' +
+        'Defaults to a sorted list of 10 million elements ' +
+        'and searches for the last element. '
+    )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('-b', '--binary', action='store_true',
-                       help="Run a binary search.")
+                       help="Use binary search.")
     group.add_argument('-r', '--recursive', action='store_true',
-                       help="Run a binary search.")
+                       help="Use recursive binary search.")
     group.add_argument('-s', '--simple', action='store_true',
-                       help="Run a simple search.")
-    parser.add_argument("-m", "--max", type=int, required=True,
+                       help="Use simple search.")
+    parser.add_argument("-m", "--max", type=int, default='10_000_000',
                         help="Max number in range.")
-    parser.add_argument("-S", "--step", type=int, required=True,
-                        help="Steps in range.")
-    parser.add_argument("-n", "--number", type=int, required=True,
-                        help="Number to search for in range.")
+    parser.add_argument("-i", "--increment", type=int, default=1,
+                        help="Number to increment each element in list by.")
+    parser.add_argument("-n", "--number", type=int, default=None,
+                        help="Number to search for in list.")
     return parser.parse_args()
 
 
@@ -65,33 +69,34 @@ def recursive_binary(arr, element, count):
 
 def search():
     args = get_args()
-    mylist = list(range(0, args.max, args.step))
+    if args.number is None:
+        args.number = args.max - 1
+    mylist = list(range(0, args.max, args.increment))
 
     if args.binary:
         found, count = binary(mylist, args.number)
-        search_type = "binary"
+        search_type = "Binary"
     elif args.recursive:
         found, count = recursive_binary(mylist, args.number, 0)
-        search_type = "recursive binary"
+        search_type = "Recursive Binary"
     else:
         found, count = simple(mylist, args.number)
-        search_type = "simple"
+        search_type = "Simple"
 
-    if found:
-        print("Found {} in {} steps, using {} search.".format(
-            args.number, count, search_type
-        ))
-    else:
-        print("{} not found in array in {} steps, using {} search.".format(
-            args.number, count, search_type
-        ))
+    print(
+        "Number: {}\n".format(args.number) +
+        "Found: {}\n".format(str(found)) +
+        "Length: {}\n".format(len(mylist)) +
+        "Steps: {}\n".format(count) +
+        "Type: {} Search".format(search_type)
+    )
 
 
 def main():
     speed = timeit.timeit(
         "search()", setup="from __main__ import search", number=1
     )
-    print("Search took {} seconds".format(speed))
+    print("Time: {} seconds".format(round(speed, 8)))
 
 
 if __name__ == '__main__':
