@@ -5,9 +5,9 @@ import timeit
 
 def get_args():
     parser = ArgumentParser(
-        description='Search for an item in a list/array.' +
+        description='Search for an item in a list. ' +
         'Defaults to a sorted list of 10 million elements ' +
-        'and searches for the last element. '
+        'and searches for the last element.'
     )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('-b', '--binary', action='store_true',
@@ -84,11 +84,11 @@ def search():
         search_type = "Simple"
 
     print(
-        "Number: {}\n".format(args.number) +
+        "\nType: {} Search\n".format(search_type) +
         "Found: {}\n".format(str(found)) +
-        "Length: {}\n".format(len(mylist)) +
-        "Steps: {}\n".format(count) +
-        "Type: {} Search".format(search_type)
+        "Number: {:,}\n".format(args.number) +
+        "Length: {:,}\n".format(len(mylist)) +
+        "Steps: {:,}".format(count)
     )
 
 
@@ -96,7 +96,7 @@ def main():
     speed = timeit.timeit(
         "search()", setup="from __main__ import search", number=1
     )
-    print("Time: {} seconds".format(round(speed, 8)))
+    print("Time: {} seconds\n".format(round(speed, 8)))
 
 
 if __name__ == '__main__':

@@ -1,0 +1,78 @@
+from argparse import ArgumentParser
+from random import randint
+from timeit import timeit
+from columns import prtcols
+
+
+def get_args():
+    parser = ArgumentParser(
+        description='Sort a list using a variety of algorithms. ' +
+        'Defaults to creating a list of 10 thousand elements, randomly, ' +
+        'from a pool of integers between 0 and 1 million.'
+    )
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-s', '--selection', action='store_true',
+                       help="Use selection sort.")
+    group.add_argument('-q', '--quick', action='store_true',
+                       help="Use quick sort.")
+    parser.add_argument("-m", "--max", type=int, default='1_000_000',
+                        help="Maximum number in list.")
+    parser.add_argument("-S", "--size", type=int, default='10_000',
+                        help="Size of list.")
+    parser.add_argument('-v', '--verbose', action='store_true',
+                        help="Print sorted list.")
+    return parser.parse_args()
+
+
+def quick():
+    pass
+
+
+def find_smallest(arr):
+    smallest = arr[0]
+    smallest_index = 0
+    for i in range(1, len(arr)):
+        if arr[i] < smallest:
+            smallest = arr[i]
+            smallest_index = i
+    return smallest_index
+
+
+def selection(arr):
+    new_arr = []
+    for i in range(len(arr)):
+        smallest = find_smallest(arr)
+        new_arr.append(arr.pop(smallest))
+    return new_arr
+
+
+def mysort():
+    args = get_args()
+    mylist = [randint(0, args.max) for i in range(0, args.size)]
+
+    if args.selection:
+        sorted_arr = selection(mylist)
+        sort_type = "Selection Sort"
+    else:
+        sorted_arr = quick(mylist)
+        sort_type = "Quick Sort"
+
+    if args.verbose:
+        print("\nSorted array:")
+        prtcols(sorted_arr)
+
+    print(
+        "\nType: {}".format(sort_type) +
+        "\nLength: {:,}".format(len(sorted_arr))
+    )
+
+
+def main():
+    speed = timeit(
+        "mysort()", setup="from __main__ import mysort", number=1
+    )
+    print("Time: {} seconds\n".format(round(speed, 8)))
+
+
+if __name__ == '__main__':
+    main()
