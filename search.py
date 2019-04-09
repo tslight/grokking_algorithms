@@ -1,12 +1,14 @@
 from argparse import ArgumentParser
 import sys
-import time
+import timeit
 
 
 def get_args():
     parser = ArgumentParser(description='Binary search')
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('-b', '--binary', action='store_true',
+                       help="Run a binary search.")
+    group.add_argument('-r', '--recursive', action='store_true',
                        help="Run a binary search.")
     group.add_argument('-s', '--simple', action='store_true',
                        help="Run a simple search.")
@@ -24,17 +26,8 @@ def simple_search(mylist, item):
     for e in mylist:
         count += 1
         if e == item:
-            print(
-                "Found {} at position {}.\n".format(
-                    e,
-                    mylist.index(e)
-                ) +
-                "Search took {} steps.".format(
-                    count
-                )
-            )
-            return
-    print("Cannot find {} in list.".format(item))
+            return (True, count)
+    return (False, count)
 
 
 def binary_search(mylist, item):
@@ -47,36 +40,58 @@ def binary_search(mylist, item):
         guess = mylist[mid]
         count += 1
         if guess == item:
-            print(
-                "Found {} at position {}.\n".format(
-                    guess,
-                    mid
-                ) +
-                "Search took {} steps.".format(
-                    count
-                )
-            )
-            return
+            return (True, count)
         elif guess > item:
             high = mid - 1
         else:
             low = mid + 1
-    print("Cannot find {} in list.".format(item))
+    return (False, count)
 
 
-def main():
+def recursive_binary_search(arr, element, count):
+    count += 1
+    low = 0
+    high = len(arr) - 1
+    mid = int((low + high) / 2)
+    if element == arr[mid]:
+        return (True, count)
+    elif high == 0:
+        return (False, count)
+    elif element > arr[mid]:
+        return recursive_binary_search(arr[mid + 1:], element, count)
+    elif element < arr[mid]:
+        return recursive_binary_search(arr[:mid - 1], element, count)
+
+
+def search():
     args = get_args()
     mylist = list(range(0, args.max, args.step))
 
-    start = time.time()
     if args.binary:
-        binary_search(mylist, args.number)
+        found, count = binary_search(mylist, args.number)
+        search_type = "binary"
+    elif args.recursive:
+        found, count = recursive_binary_search(mylist, args.number, 0)
+        search_type = "recursive binary"
     else:
-        simple_search(mylist, args.number)
-    end = time.time()
+        found, count = simple_search(mylist, args.number)
+        search_type = "simple"
 
-    elapsed = round(end - start, 20)
-    print("Search took {}".format(elapsed))
+    if found:
+        print("Found {} in {} steps, using {} search.".format(
+            args.number, count, search_type
+        ))
+    else:
+        print("{} not found in array in {} steps, using {} search.".format(
+            args.number, count, search_type
+        ))
+
+
+def main():
+    speed = timeit.timeit(
+        "search()", setup="from __main__ import search", number=1
+    )
+    print("Search took {} seconds".format(speed))
 
 
 if __name__ == '__main__':
