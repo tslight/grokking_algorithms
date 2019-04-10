@@ -3,11 +3,11 @@ from sys import argv
 from columns import prtcols
 
 
-def count(mylist):
-    if mylist == []:
-        return 0
-    else:
-        return 1 + count(mylist[1:])
+def get_largest(mylist):
+    if len(mylist) == 2:
+        return mylist[0] if mylist[0] > mylist[1] else mylist[1]
+    rest = get_largest(mylist[1:])
+    return mylist[0] if mylist[0] > rest else rest
 
 
 def main():
@@ -19,9 +19,10 @@ def main():
 
     mylist = [randint(1, (size * 100)) for i in range(0, size)]
     print("Number of elements: {}".format(len(mylist)))
-    number = count(mylist)
-    prtcols(mylist)
-    print("Number of elements: {}".format(number))
+    mylist = sorted(mylist, reverse=True)
+    largest = get_largest(mylist)
+    prtcols(sorted(mylist))
+    print("Largest element: {}".format(largest))
 
 
 if __name__ == '__main__':
