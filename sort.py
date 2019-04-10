@@ -31,9 +31,10 @@ def quick(arr):
     if len(arr) < 2:
         return arr
     else:
-        pivot = arr[0]
-        less = [i for i in arr[1:] if i <= pivot]
-        greater = [i for i in arr[1:] if i > pivot]
+        mid = int(len(arr) / 2)
+        pivot = arr[mid]
+        less = [i for i in arr[mid + 1:] if i <= pivot]
+        greater = [i for i in arr[:mid] if i > pivot]
         return quick(less) + [pivot] + quick(greater)
 
 
@@ -59,6 +60,7 @@ def mysort():
     args = get_args()
     mylist = [randint(0, args.max) for i in range(0, args.size)]
     mylist = sorted(mylist, reverse=True)  # make as hard as possible..
+    length = len(mylist)
 
     if args.selection:
         sorted_arr = selection(mylist)
@@ -78,7 +80,7 @@ def mysort():
 
     print(
         "\nType: {}".format(sort_type) +
-        "\nLength: {:,}".format(len(sorted_arr))
+        "\nLength: {:,}".format(length)
     )
 
 
