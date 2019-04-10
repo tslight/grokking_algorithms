@@ -31,10 +31,11 @@ def quick(arr):
     if len(arr) < 2:
         return arr
     else:
-        mid = int(len(arr) / 2)
-        pivot = arr[mid]
-        less = [i for i in arr[mid + 1:] if i <= pivot]
-        greater = [i for i in arr[:mid] if i > pivot]
+        index = int(len(arr) / 2)  # mid point is faster than random element
+        # index = randint(0, len(arr) - 1)  # slower than mid point of array
+        pivot = arr[index]
+        less = [i for i in arr[index + 1:] if i <= pivot]
+        greater = [i for i in arr[:index] if i > pivot]
         return quick(less) + [pivot] + quick(greater)
 
 
