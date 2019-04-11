@@ -85,11 +85,13 @@ def mysort():
     args = get_args()
 
     if args.custom:
-        mylist = args.custom
+        arr = args.custom
     else:
-        mylist = [randint(0, args.max) for i in range(0, args.size)]
-        mylist = sorted(mylist, reverse=True)  # make as hard as possible..
-    length = len(mylist)
+        arr = [randint(0, args.max) for i in range(0, args.size)]
+        arr = sorted(arr, reverse=True)  # make as hard as possible..
+
+    # make a copy as some of the sorting functions mutate the list.
+    original_arr = list(arr)
 
     do_sort = {
         'selection': selection,
@@ -100,17 +102,17 @@ def mysort():
     arg_dict = vars(args)
     sort_type = [key for key, value in arg_dict.items()
                  if key in do_sort and value][0]
-    sorted_arr = do_sort[sort_type](list(mylist))
+    sorted_arr = do_sort[sort_type](arr)
 
     if args.verbose:
         print("\nOriginal array:\n")
-        prtcols(list(mylist))
+        prtcols(original_arr)
         print("\nSorted array:\n")
-        prtcols(list(sorted_arr))
+        prtcols(sorted_arr)
 
     print(
         "\nType: {} Sort".format(sort_type.capitalize()) +
-        "\nLength: {:,}".format(length)
+        "\nLength: {:,}".format(len(original_arr))
     )
 
 
