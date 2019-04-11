@@ -11,20 +11,44 @@ def get_args():
         'from a pool of integers between 0 and 1 million and sorting them ' +
         'with a custom quick sort algorithm.'
     )
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('-s', '--selection', action='store_true',
-                       help="Use selection sort.")
-    group.add_argument('-q', '--quick', action='store_true',
-                       help="Use quick sort.")
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-b', '--bubble', action='store_true',
+                       help="Use bubble sort.")
+    group.add_argument('-i', '--insertion', action='store_true',
+                       help="Use insertion sort.")
+    group.add_argument('-m', '--merge', action='store_true',
+                       help="Use merge sort.")
     group.add_argument('-p', '--python', action='store_true',
                        help="Use Python's built in sort.")
-    parser.add_argument("-m", "--max", type=int, default='1_000_000',
+    group.add_argument('-q', '--quick', action='store_true',
+                       help="Use quick sort.")
+    group.add_argument('-s', '--selection', action='store_true',
+                       help="Use selection sort.")
+
+    parser.add_argument("-c", "--custom", action='append',
+                        help="Enter a custom array.")
+    parser.add_argument("-M", "--max", type=int, default='1_000_000',
                         help="Maximum number in list.")
     parser.add_argument("-S", "--size", type=int, default='10_000',
                         help="Size of list.")
     parser.add_argument('-v', '--verbose', action='store_true',
                         help="Print sorted list.")
+
     return parser.parse_args()
+
+
+def bubble(arr):
+    for i in range(len(arr)):
+        swapped = False
+        for j in range(len(arr) - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        if not swapped:
+            break
+
+    return arr
 
 
 def quick(arr):
@@ -59,19 +83,27 @@ def selection(arr):
 
 def mysort():
     args = get_args()
-    mylist = [randint(0, args.max) for i in range(0, args.size)]
-    mylist = sorted(mylist, reverse=True)  # make as hard as possible..
+
+    if args.custom:
+        mylist = args.custom
+    else:
+        mylist = [randint(0, args.max) for i in range(0, args.size)]
+        mylist = sorted(mylist, reverse=True)  # make as hard as possible..
     length = len(mylist)
 
-    if args.selection:
-        sorted_arr = selection(mylist)
-        sort_type = "Selection Sort"
-    elif args.python:
-        sorted_arr = sorted(mylist)
-        sort_type = "Python Sort"
-    else:
-        sorted_arr = quick(mylist)
-        sort_type = "Quick Sort"
+    do_sort = {
+        'selection': lambda: selection(mylist),
+        'python': lambda: sorted(mylist),
+        'quick': lambda: quick(mylist),
+        'bubble': lambda: bubble(mylist),
+    }
+    # arg_kwargs = args._get_kwargs()
+    # sort_type = [i[0] for i in arg_kwargs
+    #              if i[1] == True and i[0] != 'verbose'][0]
+    arg_dict = vars(args)
+    sort_type = [key for key, value in arg_dict.items()
+                 if value == True and key != 'verbose'][0]
+    sorted_arr = do_sort[sort_type]()
 
     if args.verbose:
         print("\nOriginal array:\n")
@@ -80,7 +112,7 @@ def mysort():
         prtcols(sorted_arr)
 
     print(
-        "\nType: {}".format(sort_type) +
+        "\nType: {} Sort".format(sort_type.capitalize()) +
         "\nLength: {:,}".format(length)
     )
 
