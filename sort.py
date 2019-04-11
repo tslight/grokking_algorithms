@@ -26,7 +26,7 @@ def get_args():
     group.add_argument('-s', '--selection', action='store_true',
                        help="Use selection sort.")
 
-    parser.add_argument("-c", "--custom", action='append',
+    parser.add_argument("-c", "--custom", nargs='+', type=int,
                         help="Enter a custom array.")
     parser.add_argument("-M", "--max", type=int, default='1_000_000',
                         help="Maximum number in list.")
@@ -92,24 +92,21 @@ def mysort():
     length = len(mylist)
 
     do_sort = {
-        'selection': lambda: selection(mylist),
-        'python': lambda: sorted(mylist),
-        'quick': lambda: quick(mylist),
-        'bubble': lambda: bubble(mylist),
+        'selection': selection,
+        'python': sorted,
+        'quick': quick,
+        'bubble': bubble,
     }
-    # arg_kwargs = args._get_kwargs()
-    # sort_type = [i[0] for i in arg_kwargs
-    #              if i[1] == True and i[0] != 'verbose'][0]
     arg_dict = vars(args)
     sort_type = [key for key, value in arg_dict.items()
-                 if value == True and key != 'verbose'][0]
-    sorted_arr = do_sort[sort_type]()
+                 if key in do_sort and value][0]
+    sorted_arr = do_sort[sort_type](list(mylist))
 
     if args.verbose:
         print("\nOriginal array:\n")
-        prtcols(mylist)
+        prtcols(list(mylist))
         print("\nSorted array:\n")
-        prtcols(sorted_arr)
+        prtcols(list(sorted_arr))
 
     print(
         "\nType: {} Sort".format(sort_type.capitalize()) +
