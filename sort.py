@@ -38,6 +38,24 @@ def get_args():
     return parser.parse_args()
 
 
+def merge(arr):
+    pass
+
+
+def insertion(arr):
+    for index in range(1, len(arr)):
+        value = arr[index]
+        last_index = index - 1
+        while last_index >= 0 and value < arr[last_index]:
+            # shift element at current index, right, to previous index
+            arr[last_index + 1] = arr[last_index]
+            # shift element at previous index to value of element at
+            # current index
+            arr[last_index] = value
+            last_index -= 1
+    return arr
+
+
 def bubble(arr):
     for i in range(len(arr)):
         swapped = False
@@ -95,10 +113,12 @@ def mysort():
     original_arr = list(arr)
 
     do_sort = {
-        'selection': selection,
+        'bubble': bubble,
+        'insertion': insertion,
+        'merge': merge,
         'python': sorted,
         'quick': quick,
-        'bubble': bubble,
+        'selection': selection,
     }
     arg_dict = vars(args)
     sort_type = [key for key, value in arg_dict.items()
@@ -107,9 +127,9 @@ def mysort():
 
     if args.verbose:
         print("\nOriginal array:\n")
-        prtcols(original_arr)
+        prtcols(original_arr, 42)
         print("\nSorted array:\n")
-        prtcols(sorted_arr)
+        prtcols(sorted_arr, 42)
 
     print(
         "\nType: {} Sort".format(sort_type.capitalize()) +
