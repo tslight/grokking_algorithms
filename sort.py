@@ -43,16 +43,15 @@ def merge(arr):
 
 
 def insertion(arr):
-    for index in range(1, len(arr)):
-        value = arr[index]
-        last_index = index - 1
-        while last_index >= 0 and value < arr[last_index]:
-            # shift element at current index, right, to previous index
-            arr[last_index + 1] = arr[last_index]
-            # shift element at previous index to value of element at
-            # current index
-            arr[last_index] = value
-            last_index -= 1
+    for i in range(1, len(arr)):
+        e = arr[i]  # marker for current element whilst traversing previous.
+        j = i - 1   # marker for index of previous element
+        # move current element back to beginning of list if it's smaller than
+        # previous, by swapping it with the previous element until we are back
+        # at the beginning of the list.
+        while j >= 0 and e < arr[j]:
+            arr[j + 1], arr[j] = arr[j], e
+            j -= 1  # decrement marker to reverse traverse list
     return arr
 
 
