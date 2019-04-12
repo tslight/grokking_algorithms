@@ -57,9 +57,10 @@ def quick(arr):
     else:
         index = int(len(arr) / 2)  # mid point is faster than random element
         # index = randint(0, len(arr) - 1)  # slower than mid point of array
-        pivot = arr[index]
-        less = [i for i in arr[:index] + arr[index + 1:] if i <= pivot]
-        greater = [i for i in arr[:index] + arr[index + 1:] if i > pivot]
+        pivot = arr[index]  # pivot less list!
+        pivotlest = arr[:index] + arr[index + 1:]
+        less = [i for i in pivotlest if i <= pivot]
+        greater = [i for i in pivotlest if i > pivot]
         return quick(less) + [pivot] + quick(greater)
 
 
