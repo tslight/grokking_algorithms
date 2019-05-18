@@ -136,6 +136,15 @@ def mysort():
     )
 
 
+def customsort(arr):
+    freq = {}
+    for i in arr:
+        if i in freq:
+            freq[i] += 1
+        else:
+            freq[i] = 1
+
+
 def main():
     speed = timeit(
         "mysort()", setup="from __main__ import mysort", number=1
